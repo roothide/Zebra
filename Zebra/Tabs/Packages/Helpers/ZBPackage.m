@@ -662,17 +662,18 @@
     ZBQueue *queue = [ZBQueue sharedQueue];
     
     if ([[self source] sourceID] == 0) {
+        
+        if (![queue contains:self inQueue:ZBQueueTypeUpgrade] && [[self greaterVersions] count] ) {
+            // Only going to explicitly show an "Upgrade" button if there are higher versions available
+            [actions addObject:@(ZBPackageActionUpgrade)]; // Select higher versions
+        }
+        
         // If the package is installed then we can show other options
         if (![queue contains:self inQueue:ZBQueueTypeReinstall] && [self isReinstallable]) {
             // Search for the same version of this package in the database
             [actions addObject:@(ZBPackageActionReinstall)];
         }
-            
-        if (![queue contains:self inQueue:ZBQueueTypeUpgrade] && [[self greaterVersions] count] ) {
-            // Only going to explicitly show an "Upgrade" button if there are higher versions available
-            [actions addObject:@(ZBPackageActionUpgrade)]; // Select higher versions
-        }
-            
+        
         if (![queue contains:self inQueue:ZBQueueTypeDowngrade] && [[self lesserVersions] count]) {
             // Only going to explicily show a "Downgrade" button if there are lower versions available
             [actions addObject:@(ZBPackageActionDowngrade)];
@@ -686,6 +687,7 @@
             // Updates are not ignored, give the option to hide them
             [actions addObject:@(ZBPackageActionHideUpdates)];
         }
+        
         [actions addObject:@(ZBPackageActionRemove)]; // Show the remove button regardless
     }
     else if ([self isInstalled:NO]) { // This means the package is installed but this isn't the version that is currently installed
@@ -696,6 +698,14 @@
         return [basePackage possibleActions];
     }
     else { // This means the package is not installed
+        
+        if ([[self allVersions] count] > 1 && ![ZBSettings alwaysInstallLatest]) { // Show "Select version" instead of "Install" as it makes more sense
+            [actions addObject:@(ZBPackageActionSelectVersion)];
+        }
+        else {
+            [actions addObject:@(ZBPackageActionInstall)]; // Show "Install" otherwise (could be disabled if its already in the Queue)
+        }
+        
         if ([[ZBDatabaseManager sharedInstance] packageHasUpdate:self] && [self isEssentialOrRequired]) {
             // If the package has an update available and it is essential or required (a "suggested" package) then you can ignore it
             if ([self ignoreUpdates]) {
@@ -707,15 +717,9 @@
                 [actions addObject:@(ZBPackageActionHideUpdates)];
             }
         }
-        if ([[self allVersions] count] > 1 && ![ZBSettings alwaysInstallLatest]) { // Show "Select version" instead of "Install" as it makes more sense
-            [actions addObject:@(ZBPackageActionSelectVersion)];
-        }
-        else {
-            [actions addObject:@(ZBPackageActionInstall)]; // Show "Install" otherwise (could be disabled if its already in the Queue)
-        }
     }
     
-    return [actions sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES]]];
+    return actions;
 }
 
 - (void)purchase:(void (^)(BOOL success, NSError *_Nullable error))completion {
