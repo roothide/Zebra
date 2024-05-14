@@ -1481,7 +1481,7 @@
 					"$(PROJECT_DIR)/Zebra",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = "1.1.36-1";
+				MARKETING_VERSION = "1.1.36-2";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.willy.Zebra;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1595,7 +1595,7 @@
 					"$(PROJECT_DIR)/Zebra",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = "1.1.36-1";
+				MARKETING_VERSION = "1.1.36-2";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.willy.Zebra;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1771,7 +1771,7 @@
 					"$(PROJECT_DIR)/Zebra",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = "1.1.36-1";
+				MARKETING_VERSION = "1.1.36-2";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.willy.Zebra;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1823,7 +1823,7 @@
 					"$(PROJECT_DIR)/Zebra",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = "1.1.36-1";
+				MARKETING_VERSION = "1.1.36-2";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.willy.Zebra;
 				PRODUCT_NAME = "$(TARGET_NAME)";

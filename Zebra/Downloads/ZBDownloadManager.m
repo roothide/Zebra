@@ -118,7 +118,9 @@
     
     NSMutableURLRequest *packagesRequest = [[NSMutableURLRequest alloc] initWithURL:url];
     if (!ignore) {
-        [packagesRequest setValue:[self lastModifiedDateForFile:[self saveNameForURL:url]] forHTTPHeaderField:@"If-Modified-Since"];
+        NSString* lastModTime = [self lastModifiedDateForFile:[self saveNameForURL:url]];
+        NSLog(@"If-Modified-Since %@ -> %@", [self saveNameForURL:url], lastModTime);
+        [packagesRequest setValue:lastModTime forHTTPHeaderField:@"If-Modified-Since"];
     }
     
     NSURLSessionTask *packagesTask = [session downloadTaskWithRequest:packagesRequest]; NSLog(@"downloadTaskWithRequest %@", packagesRequest);
@@ -435,6 +437,8 @@
     NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
     [formatter setTimeZone:gmt];
     [formatter setDateFormat:@"E, d MMM yyyy HH:mm:ss"];
+    NSLog(@"formatter=%@, locale=%@", formatter, formatter.locale.localeIdentifier);
+    [formatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
     
     return [NSString stringWithFormat:@"%@ GMT", [formatter stringFromDate:date]];
 }

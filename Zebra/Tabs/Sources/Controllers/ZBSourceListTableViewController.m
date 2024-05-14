@@ -166,7 +166,9 @@
         if (![self.databaseManager isDatabaseBeingUpdated]) {
             NSString *title = [ZBDevice useIcon] ? @"↻" : NSLocalizedString(@"Refresh", @"");
             UITableViewRowAction *refreshAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:title handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-                [self.databaseManager updateSource:source useCaching:YES];
+//                [self.databaseManager updateSource:source useCaching:YES];
+                //update single repo, ignore cache
+                [self.databaseManager updateSource:source useCaching:NO];
             }];
             
             ZBAccentColor accentColor = [ZBSettings accentColor];

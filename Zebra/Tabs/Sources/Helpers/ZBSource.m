@@ -137,8 +137,10 @@ const char *textColumn(sqlite3_stmt *statement, int column) {
 }
 
 - (BOOL)canDelete {
+    NSLog(@"canDelete %@ %@", self, self.baseFilename);
     return ![[self baseFilename] isEqualToString:@"getzbra.com_repo_"]
-    && ![[self baseFilename] isEqualToString:@"roothide.github.io"];
+    && ![[self baseFilename] isEqualToString:@"roothide.github.io_"]
+    && ![[self baseFilename] hasPrefix:@"roothide.github.io_procursus_"];
 }
 
 - (BOOL)isEqual:(ZBSource *)object {

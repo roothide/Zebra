@@ -69,7 +69,7 @@ char *replace_char(char *str, char find, char replace) {
 int isSourceSecure(const char *sourcePath, char *sourceURL) {
     FILE *file = fopen(sourcePath, "r");
     if (file != NULL) {
-        char line[256];
+        char line[1024]={0};
         
         char *url = strtok(sourceURL, "_");
         
@@ -183,7 +183,7 @@ enum PARSEL_RETURN_TYPE addSourceToDatabase(struct ZBBaseSource source, const ch
         return PARSEL_FILENOTFOUND;
     }
     
-    char line[256];
+    char line[1024]={0};
     
     createTable(database, 0);
     
@@ -475,8 +475,6 @@ enum PARSEL_RETURN_TYPE importPackagesToDatabase(const char *path, sqlite3 *data
         return PARSEL_FILENOTFOUND;
     }
     
-    char line[2048];
-    
     createTable(database, 1);
     sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
     
@@ -485,8 +483,9 @@ enum PARSEL_RETURN_TYPE importPackagesToDatabase(const char *path, sqlite3 *data
     bool longDescFlag = false;
     
     char longDescription[LONG_DESCRIPTION_MAX_LENGTH] = "";
-    char depends[512] = "";
+    char depends[4096] = {""};
     
+    char line[4096]={0};
     while (fgets(line, sizeof(line), file)) {
         if (strlen(trim(line)) != 0) {
             if (longDescFlag && isspace(line[0])) {
@@ -561,7 +560,6 @@ enum PARSEL_RETURN_TYPE updatePackagesInDatabase(const char *path, sqlite3 *data
     if (file == NULL) {
         return PARSEL_FILENOTFOUND;
     }
-    char line[4096];
     
     sqlite3_exec(database, "BEGIN TRANSACTION", NULL, NULL, NULL);
     char sql[64];
@@ -575,6 +573,7 @@ enum PARSEL_RETURN_TYPE updatePackagesInDatabase(const char *path, sqlite3 *data
     char longDescription[LONG_DESCRIPTION_MAX_LENGTH] = "";
     char depends[4096] = "";
     
+    char line[4096]={0};
     while (fgets(line, sizeof(line), file)) {
         if (strlen(trim(line)) != 0) {
             if (longDescFlag && isspace(line[0])) {

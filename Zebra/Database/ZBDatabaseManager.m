@@ -262,6 +262,7 @@
 #pragma mark - Populating the database
 
 - (void)updateDatabaseUsingCaching:(BOOL)useCaching userRequested:(BOOL)requested {
+    NSLog(@"updateDatabaseUsingCaching useCaching=%d userRequested=%d", useCaching, requested);
     if (databaseBeingUpdated)
         return;
     databaseBeingUpdated = YES;
@@ -272,16 +273,16 @@
     }
 
     if (!requested && [ZBSettings wantsAutoRefresh]) {
-        NSDate *currentDate = [NSDate date];
+        /*NSDate *currentDate = [NSDate date];
         NSDate *lastUpdatedDate = [ZBDatabaseManager lastUpdated];
 
         if (lastUpdatedDate != NULL) {
             NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
             NSUInteger unitFlags = NSCalendarUnitMinute;
             NSDateComponents *components = [gregorian components:unitFlags fromDate:lastUpdatedDate toDate:currentDate options:0];
-
+            NSLog(@"lastUpdatedDate=%@ %d", lastUpdatedDate, [components minute]);
             needsUpdate = ([components minute] >= 30);
-        } else {
+        } else*/ {
             needsUpdate = YES;
         }
     }
@@ -309,6 +310,7 @@
 }
 
 - (void)updateSources:(NSSet <ZBBaseSource *> *)sources useCaching:(BOOL)useCaching {
+    NSLog(@"updateSources %@ useCaching=%d", sources, useCaching);
     [self bulkDatabaseStartedUpdate];
     if (!self.downloadManager) {
         self.downloadManager = [[ZBDownloadManager alloc] initWithDownloadDelegate:self];
