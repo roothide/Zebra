@@ -444,8 +444,10 @@
         return;
     }
     
+    NSURL *requestURL = [[downloadTask originalRequest] URL] ?: [response URL];
+
     NSString *MIMEType = [response MIMEType];
-    NSString *requestedMIMEType = [self guessMIMETypeForFile:[[response URL] lastPathComponent]];
+    NSString *requestedMIMEType = [self guessMIMETypeForFile:[requestURL lastPathComponent]];
     NSArray *acceptableMIMETypes = @[@"text/plain", @"application/x-xz", @"application/x-bzip2", @"application/x-gzip", @"application/x-lzma", @"application/x-deb", @"application/x-debian-package"];
     NSUInteger index = [acceptableMIMETypes indexOfObject:MIMEType];
     if (packageTasksMap[@([downloadTask taskIdentifier])]) {
@@ -453,7 +455,7 @@
         index = [acceptableMIMETypes indexOfObject:MIMEType];
     }
     else if (index == NSNotFound || ![requestedMIMEType isEqualToString:MIMEType]) {
-        MIMEType = [self guessMIMETypeForFile:[[response URL] absoluteString]];
+        MIMEType = [self guessMIMETypeForFile:[requestURL absoluteString]];
         index = [acceptableMIMETypes indexOfObject:MIMEType];
     }
     
@@ -473,14 +475,14 @@
                         error = [self.class errorForHTTPStatusCode:responseCode forFile:suggestedFilename];
                     }
                     
-                    [self task:downloadTask completedDownloadedForFile:[[response URL] absoluteString] fromSource:source withError:error];
+                    [self task:downloadTask completedDownloadedForFile:[requestURL absoluteString] fromSource:source withError:error];
                 }
                 else {
                     //Move the file to the save name location
                     NSString *listsPath = [ZBAppDelegate listsLocation];
-                    NSString *saveName = [self saveNameForURL:[response URL]];
+                    NSString *saveName = [self saveNameForURL:requestURL];
                     NSString *finalPath = [listsPath stringByAppendingPathComponent:saveName];
-                    NSString *originalPathExtension = [[response URL] pathExtension];
+                    NSString *originalPathExtension = [requestURL pathExtension];
                     if (originalPathExtension != nil && ![originalPathExtension isEqualToString:@""]) {
                         finalPath = [finalPath stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@".%@", [finalPath pathExtension]] withString:@""]; //Remove path extension from Packages or Release
                     }
@@ -505,12 +507,12 @@
                     NSString *suggestedFilename = [response suggestedFilename];
                     NSError *error = [self.class errorForHTTPStatusCode:responseCode forFile:suggestedFilename];
                     
-                    [self task:downloadTask completedDownloadedForFile:[[response URL] absoluteString] fromSource:source withError:error];
+                    [self task:downloadTask completedDownloadedForFile:[requestURL absoluteString] fromSource:source withError:error];
                 }
                 else {
                     //Move the file to the save name location
                     NSString *listsPath = [ZBAppDelegate listsLocation];
-                    NSString *saveName = [self saveNameForURL:[response URL]];
+                    NSString *saveName = [self saveNameForURL:requestURL];
                     NSString *finalPath = [listsPath stringByAppendingPathComponent:saveName];
                     [self moveFileFromLocation:location to:finalPath completion:^(NSError *error) {
                         if (error) {
