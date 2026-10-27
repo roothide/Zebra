@@ -6,6 +6,8 @@
 //  Copyright © 2019 Wilson Styres. All rights reserved.
 //
 
+#include <roothide.h>
+
 #import "ZBConsoleViewController.h"
 #import "ZBStage.h"
 #import "ZBCanisterDownloadIngests.h"
@@ -319,10 +321,10 @@ typedef NS_ENUM(NSUInteger, ZBConsoleFinishOption) {
 
                 NSArray *baseCommand;
                 if ([[ZBDevice packageManagementBinary] isEqualToString:@INSTALL_PREFIX @"/usr/bin/dpkg"]) {
-                    baseCommand = @[@"dpkg", queue.removingZebra ? @"-r" : @"-i", queue.zebraPath ? path : @"xyz.willy.zebra"];
+                    baseCommand = @[@"dpkg", queue.removingZebra ? @"-r" : @"-i", queue.zebraPath ? rootfs(path) : @"xyz.willy.zebra"];
                 }
                 else {
-                    baseCommand = @[@"apt", @"-yqf", @"--allow-downgrades", @"-oApt::Get::HideAutoRemove=true", @"-oquiet::NoProgress=true", @"-oquiet::NoStatistic=true", queue.removingZebra ? @"remove" : @"install", queue.zebraPath ? path : @"xyz.willy.zebra"];
+                    baseCommand = @[@"apt", @"-yqf", @"--allow-downgrades", @"-oApt::Get::HideAutoRemove=true", @"-oquiet::NoProgress=true", @"-oquiet::NoStatistic=true", queue.removingZebra ? @"remove" : @"install", queue.zebraPath ? rootfs(path) : @"xyz.willy.zebra"];
                 }
 
                 if (![ZBDevice needsSimulation]) {
@@ -431,7 +433,11 @@ typedef NS_ENUM(NSUInteger, ZBConsoleFinishOption) {
         if (applicationBundlePaths.count > 1) {
             [self updateIconCaches];
         } else {
+#ifdef THEOS_PACKAGE_SCHEME_ROOTHIDE
+            [ZBDevice uicache:@[@"-p", @"/Applications/Zebra.app"] observer:self];
+#else
             [ZBDevice uicache:@[@"-p", @INSTALL_PREFIX @"/Applications/Zebra.app"] observer:self];
+#endif
         }
     }
 }

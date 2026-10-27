@@ -1,4 +1,5 @@
 .theos/
+.build/
 Supersling/.theos
 /packages/
 .DS_Store

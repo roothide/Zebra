@@ -316,6 +316,9 @@ static ZBBootstrap bootstrap = ZBBootstrapUnknown;
     [super load];
 
     isPrefixed = ![@INSTALL_PREFIX isEqualToString:@""];
+#ifdef THEOS_PACKAGE_SCHEME_ROOTHIDE
+    isPrefixed = YES;
+#endif
     jailbreak = [self _jailbreak];
 
     if (self.needsSimulation) {

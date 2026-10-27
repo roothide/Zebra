@@ -6,6 +6,8 @@
 //  Copyright © 2019 Wilson Styres. All rights reserved.
 //
 
+#include <roothide.h>
+
 #import "ZBPackage.h"
 #import "ZBPackageActions.h"
 
@@ -344,7 +346,7 @@
     NSString *stringRead;
     if (![ZBDevice needsSimulation]) {
         stringRead = [ZBCommand execute:@INSTALL_PREFIX @"/usr/bin/dpkg"
-                          withArguments:@[@"-I", path, @"control"]
+                          withArguments:@[@"-I", rootfs(path), @"control"]
                                  asRoot:NO];
     }
     else {

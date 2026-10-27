@@ -1,0 +1,7 @@
+module roothide {
+  header "libroothide.h"
+
+  link "roothide"
+
+  export *
+}

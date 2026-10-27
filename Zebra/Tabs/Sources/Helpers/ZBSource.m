@@ -136,6 +136,14 @@ const char *textColumn(sqlite3_stmt *statement, int column) {
 }
 
 - (BOOL)canDelete {
+#ifdef THEOS_PACKAGE_SCHEME_ROOTHIDE
+    NSString *baseFilename = [self baseFilename];
+    if ([baseFilename isEqualToString:@"roothide.github.io_"]
+     || [baseFilename hasPrefix:@"github.com_roothide_roothide.github.io_releases_download_"]
+     || [baseFilename hasPrefix:@"roothide.github.io_procursus_"]) {
+        return NO;
+    }
+#endif
     return ![[self baseFilename] isEqualToString:@"getzbra.com_repo_"];
 }
 

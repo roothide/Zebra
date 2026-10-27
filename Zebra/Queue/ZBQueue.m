@@ -6,6 +6,8 @@
 //  Copyright © 2019 Wilson Styres. All rights reserved.
 //
 
+#include <roothide.h>
+
 #import "ZBQueue.h"
 #import "ZBPackage.h"
 #import "ZBSource.h"
@@ -390,7 +392,7 @@
                 zebraPath = package.debPath;
             }
             else {
-                [result addObject:package.debPath];
+                [result addObject:rootfs(package.debPath)];
             }
         }
     }

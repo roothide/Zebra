@@ -6,6 +6,8 @@
 //  Copyright © 2018 Wilson Styres. All rights reserved.
 //
 
+#include <roothide.h>
+
 #import "ZBAppDelegate.h"
 #import "ZBTabBarController.h"
 #import "ZBLog.h"
@@ -62,7 +64,12 @@ NSString *const ZBUserEndedScreenCaptureNotification = @"EndedScreenCaptureNotif
 + (NSString *)documentsDirectory {
     NSString *path_ = nil;
     if (![ZBDevice needsSimulation]) {
+#ifdef THEOS_PACKAGE_SCHEME_ROOTHIDE
+        path_ = jbroot(@"/var/mobile/Library/Application Support");
+#else
         path_ = @"/var/mobile/Library/Application Support";
+#endif
+
     } else {
         path_ = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     }
